@@ -40,14 +40,19 @@ DASHSCOPE_API_KEY=your_api_key_here
 
 ### 3. 放入文章
 
-将要转换的文章保存为根目录的 `article.md`。
+将文章以 `{slug}.txt` 命名，放入 `articles/` 目录。文件名即为视频的 slug，例如：
+
+```
+articles/ai-hardware.txt
+articles/rsi-ai.txt
+```
 
 ### 4. 用 AI Agent 生成视频
 
 用支持 Claude 的 AI 编程助手（如 Claude Code）打开项目，对话：
 
 ```
-处理 article.md
+处理 articles/ai-hardware.txt
 ```
 
 Agent 会自动完成：
@@ -77,9 +82,10 @@ vibe-video/
 │   ├── Root.tsx                 # Remotion 入口
 │   ├── components/              # 通用场景组件库（10 种）
 │   └── videos/                  # 生成的视频（gitignore）
-├── public/
-│   └── voiceover/               # 生成的音频（gitignore）
-└── article.md                   # 当前处理的文章（gitignore）
+├── articles/                    # 待处理的文章（gitignore，用户自己放）
+│   └── {slug}.txt               # 文件名即为视频 slug
+└── public/
+    └── voiceover/               # 生成的音频（gitignore）
 ```
 
 ## 场景组件库

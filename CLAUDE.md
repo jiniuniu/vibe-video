@@ -19,8 +19,9 @@
 ```
 vibe-video/
 ├── CLAUDE.md                          # 本文件
-├── article.md                         # 当前待处理的文章（用户放在这里）
 ├── generate-voiceover-audio.ts        # TTS 生成脚本（通用，不随视频变化）
+├── articles/                          # 待处理的文章（gitignore，用户自己放）
+│   └── {slug}.txt                     # 文件名即为视频 slug
 ├── src/
 │   ├── Root.tsx                       # Remotion 入口，注册所有视频的 Composition
 │   ├── components/                    # 通用场景组件库（10 种）
@@ -42,19 +43,16 @@ vibe-video/
 │           └── scenes/                # 该视频的 Scene 组件（使用组件库填充内容）
 │               ├── Scene1Hook.tsx
 │               └── ...
-├── public/
-│   └── voiceover/
-│       └── {slug}/                    # 每个视频的音频文件
-│           ├── scene-1.wav
-│           └── ...
-└── videos/                            # 归档（article.md 备份）
-    └── {slug}/
-        └── article.md
+└── public/
+    └── voiceover/
+        └── {slug}/                    # 每个视频的音频文件
+            ├── scene-1.wav
+            └── ...
 ```
 
-> **约定**：新增视频时，在 `src/videos/{slug}/` 下创建所有文件，
+> **约定**：将文章以 `{slug}.txt` 命名放入 `articles/` 目录，文件名即为视频 slug。
+> 新增视频时，在 `src/videos/{slug}/` 下创建所有文件，
 > 并在 `src/Root.tsx` 里注册新的 Composition。
-> `article.md`（根目录）是每次处理的入口，处理完后备份到 `videos/{slug}/article.md`。
 
 ## 视频风格规范
 
@@ -93,20 +91,18 @@ vibe-video/
 - 观点分析类文章多用 `QuoteScene` + `TensionScene`
 - 行业分析类文章多用 `CaseScene` + `PredictionScene`
 
-## 完整工作流（用户说"处理 article.md"时执行）
+## 完整工作流（用户说"处理 articles/xxx.txt"时执行）
 
 ### Step 0：准备工作区
 
-1. 读取 `article.md`，从标题或内容提取一个英文 slug（如 `rsi-ai`、`ai-hardware`）
+1. 读取指定文章文件（如 `articles/ai-hardware.txt`），**文件名去掉后缀即为 slug**（如 `ai-hardware`）
 2. 创建目录：
    - `src/videos/{slug}/scenes/`
    - `public/voiceover/{slug}/`
-   - `videos/{slug}/`
-3. 拷贝 `article.md` 到 `videos/{slug}/article.md`
 
 ### Step 1：分析文章，生成场景脚本
 
-读取 `article.md`，生成 `src/videos/{slug}/voiceover-script.json`：
+读取 `articles/{slug}.txt`，生成 `src/videos/{slug}/voiceover-script.json`：
 
 ```json
 {
@@ -150,9 +146,36 @@ node --env-file=.env --experimental-strip-types generate-voiceover-audio.ts {slu
 
 在 `src/videos/{slug}/scenes/` 下为每个 scene 创建一个 TSX 文件。
 
-**每个 Scene 组件的写法**：从 `src/components/` 导入对应的组件类型，填充该 scene 的具体内容数据，重新导出。
+#### 判断规则：优先用组件库，不满足再自定义
 
-示例——`Scene1Hook.tsx`：
+**第一步：判断能否用组件库**
+
+对每个 scene，先对照下表检查内容是否能被组件库的 props 完整表达：
+
+| componentType | 能表达的内容 | 不能表达的内容（→ 自定义） |
+|---|---|---|
+| `HookScene` | 标题 + 副标题 + 两个对立标签 | 需要超过两个标签、复杂图表 |
+| `ConceptScene` | 术语 + 定义 + cycle/arrow/layers 三种图示 | 需要自定义图示 |
+| `AnalogyConcept` | 概念 + 类比对象 + 映射关系列表 | 需要超过两列对比 |
+| `CaseScene` | 1-2 个案例卡片，每张含数字指标/描述/badge | 需要 3 个以上案例 |
+| `CompareScene` | 左右两列对比，每列含要点列表 + badge | 需要三方对比 |
+| `QuoteScene` | 引用文字 + 作者 + 要点列表 | 需要多个引用 |
+| `ReasoningScene` | 步骤列表（label + text + color） + 结论 | 需要分支结构 |
+| `TensionScene` | 表面现象 vs 真实情况（各含标题+正文） | 需要三方以上对比 |
+| `PredictionScene` | 预测列表（主体 + 预测 + 置信度高/中/低） | 需要进度条等特殊可视化 |
+| `ConclusionScene` | 要点列表（icon + text） + CTA 按钮 | 需要深色背景以外的风格 |
+
+**如果内容能被 props 完整表达 → 用组件库**（写法见下方示例）
+
+**如果有以下任一情况 → 自定义**：
+- 需要展示特殊数据可视化（进度条对比、层级图、流程图等）
+- 内容结构超出 props 设计范围（如 3 个以上卡片）
+- 该 scene 有独特的视觉创意，组件库无法实现
+
+#### 写法 A：使用组件库（优先）
+
+从 `src/components/` 导入对应组件，填充内容数据后导出：
+
 ```tsx
 import { HookScene } from "../../../components";
 
@@ -169,7 +192,6 @@ export const Scene1Hook: React.FC<{ audioFile: string }> = ({ audioFile }) => (
 );
 ```
 
-示例——`Scene3Cases.tsx`：
 ```tsx
 import { CaseScene } from "../../../components";
 
@@ -198,6 +220,13 @@ export const Scene3Cases: React.FC<{ audioFile: string }> = ({ audioFile }) => (
   />
 );
 ```
+
+#### 写法 B：自定义组件（组件库无法满足时）
+
+从头写完整 TSX，遵守 Remotion 关键规则（见下方）：
+- `<Audio src={staticFile(audioFile)} />` 放在 AbsoluteFill 内第一个位置
+- 所有动画用 `useCurrentFrame()` + `spring` / `interpolate` 驱动
+- 加载字体：`const { fontFamily } = loadFont("normal", { weights: ["400", "700"] })`
 
 ### Step 4：创建视频的 Composition.tsx
 

@@ -8,7 +8,7 @@ out
 public/voiceover/
 src/videos/
 videos/
-article.md
+articles/*.txt
 voiceover-script.json
 
 # Other AI tool configs
