@@ -60,7 +60,7 @@ Agent 会自动完成：
 2. 生成旁白脚本（`src/videos/{slug}/voiceover-script.json`）
 3. 调用 TTS API 生成音频（`public/voiceover/{slug}/`）
 4. 生成所有 Scene 组件（`src/videos/{slug}/scenes/`）
-5. 创建 Composition 并注册到 Root.tsx
+5. 创建 Composition（自动注册，无需手动修改 Root.tsx）
 
 ### 5. 预览 & 渲染
 
