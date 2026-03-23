@@ -123,6 +123,8 @@ vibe-video/
 }
 ```
 
+**旁白文案语言**：无论输入文章是中文还是英文，`voiceoverText` 必须用**中文**撰写。
+
 **旁白文案风格**：知识博主口吻，口语化，有节奏感，偶尔反问带入听众，每段 60-120 字。
 
 **场景数量**：5-8 个，根据文章长度和信息密度决定。
@@ -171,6 +173,8 @@ node --env-file=.env --experimental-strip-types generate-voiceover-audio.ts {slu
 - 需要展示特殊数据可视化（进度条对比、层级图、流程图等）
 - 内容结构超出 props 设计范围（如 3 个以上卡片）
 - 该 scene 有独特的视觉创意，组件库无法实现
+
+**语言要求：无论输入文章是中文还是英文，所有 props 中的文字内容（title、subtitle、label、points、prediction 等）必须用中文填写。**
 
 #### 写法 A：使用组件库（优先）
 
@@ -236,12 +240,22 @@ export const Scene3Cases: React.FC<{ audioFile: string }> = ({ audioFile }) => (
 - 使用 mediabunny 的 `calculateMetadata` 读取音频时长
 - 使用 `TransitionSeries` + `fade` 过渡串联所有 scene
 - 导出命名为 `{SlugCamel}Composition`（如 `AIHardwareComposition`）
+- **文件末尾必须导出 `meta` 对象**（Root.tsx 自动扫描依赖此导出）：
+
+```ts
+export const meta = {
+  id: "{slug}",
+  component: {SlugCamel}Composition,
+  calculateMetadata,
+  defaultProps: { sceneDurations: [] } satisfies CompositionProps,
+};
+```
 
 参考 `src/videos/rsi-ai/Composition.tsx` 的结构。
 
-### Step 5：注册到 Root.tsx
+### Step 5：验证（无需手动注册 Root.tsx）
 
-在 `src/Root.tsx` 中添加新的 `<Composition>` 注册，id 为 slug。
+`Root.tsx` 会自动扫描所有 `src/videos/*/Composition.tsx` 并注册，**不需要手动修改 Root.tsx**。
 
 ### Step 6：验证
 
