@@ -1,18 +1,12 @@
 import "./index.css";
-import { Composition } from "remotion";
-import { MyComposition } from "./Composition";
+
+// 在这里注册你的视频 Composition
+// 参考 CLAUDE.md 中的工作流，运行后会自动生成并注册
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      <Composition
-        id="MyComp"
-        component={MyComposition}
-        durationInFrames={60}
-        fps={30}
-        width={1280}
-        height={720}
-      />
+      {/* 生成视频后，Composition 会自动注册到这里 */}
     </>
   );
 };

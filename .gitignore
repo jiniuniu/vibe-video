@@ -2,6 +2,17 @@ node_modules
 dist
 .DS_Store
 .env
-
-# Ignore the output video from Git but not videos you import into src/.
 out
+
+# Generated video content (users generate their own)
+public/voiceover/
+src/videos/
+videos/
+article.md
+voiceover-script.json
+
+# Other AI tool configs
+.cline/
+.codebuddy/
+.opencode/
+.qwen/

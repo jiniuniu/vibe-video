@@ -7,14 +7,19 @@
   "private": true,
   "dependencies": {
     "@remotion/cli": "4.0.438",
+    "@remotion/google-fonts": "4.0.438",
+    "@remotion/media": "4.0.438",
+    "@remotion/tailwind-v4": "4.0.438",
+    "@remotion/transitions": "4.0.438",
+    "mediabunny": "1.39.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remotion": "4.0.438",
-    "@remotion/tailwind-v4": "4.0.438",
     "tailwindcss": "4.0.0"
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.438",
+    "@types/node": "^25.5.0",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",
     "eslint": "9.19.0",
