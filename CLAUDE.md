@@ -129,7 +129,6 @@ vibe-video/
 
 **场景数量**：5-8 个，根据文章长度和信息密度决定。
 
-同时将此文件**软链接或拷贝**到根目录的 `voiceover-script.json`（generate-voiceover-audio.ts 需要读取根目录的文件）。
 
 ### Step 2：生成旁白音频
 

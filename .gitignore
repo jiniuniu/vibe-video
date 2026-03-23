@@ -9,7 +9,6 @@ public/voiceover/
 src/videos/
 videos/
 articles/*.txt
-voiceover-script.json
 
 # But keep the auto-scan working: Root.tsx needs no videos to exist
 # Users' generated src/videos/ dirs are fully gitignored
