@@ -12,6 +12,7 @@
     "@remotion/tailwind-v4": "4.0.438",
     "@remotion/transitions": "4.0.438",
     "mediabunny": "1.39.2",
+    "qiniu": "^7.15.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remotion": "4.0.438",
@@ -30,7 +31,9 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "render": "remotion render",
+    "upload": "node --env-file=.env --experimental-strip-types upload-to-qiniu.ts"
   },
   "sideEffects": [
     "*.css"

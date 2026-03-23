@@ -1,9 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { join } from "path";
 import { execSync } from "child_process";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY;
 if (!DASHSCOPE_API_KEY) {
@@ -18,8 +15,8 @@ if (!slug) {
   process.exit(1);
 }
 
-const SCRIPT_PATH = join(__dirname, "src/videos", slug, "voiceover-script.json");
-const PUBLIC_DIR = join(__dirname, "public");
+const SCRIPT_PATH = join(process.cwd(), "src/videos", slug, "voiceover-script.json");
+const PUBLIC_DIR = join(process.cwd(), "public");
 
 interface Scene {
   id: string;
